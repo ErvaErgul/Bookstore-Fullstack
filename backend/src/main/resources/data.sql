@@ -1,0 +1,10 @@
+INSERT INTO books(name,author,type,price,stock) VALUES ('BookOne','Ali','Novel',50,15);
+INSERT INTO books(name,author,type,price,stock) VALUES ('BookTwo','Veli','Horror',75,25);
+INSERT INTO books(name,author,type,price,stock) VALUES ('BookThree','Ahmet','Action',125,20);
+INSERT INTO books(name,author,type,price,stock) VALUES ('BookFour','Mehmet','Drama',150,5);
+INSERT INTO books(name,author,type,price,stock) VALUES ('BookFive','Murat','Mystery',25,10);
+INSERT INTO books(name,author,type,price,stock) VALUES ('BookOne New','Ali','Novel',50,15);
+INSERT INTO books(name,author,type,price,stock) VALUES ('BookTwo New','Veli','Horror',75,25);
+INSERT INTO books(name,author,type,price,stock) VALUES ('BookThree New','Ahmet','Action',125,20);
+INSERT INTO books(name,author,type,price,stock) VALUES ('BookFour New','Mehmet','Drama',150,5);
+INSERT INTO books(name,author,type,price,stock) VALUES ('BookFive New','Murat','Mystery',25,10);
