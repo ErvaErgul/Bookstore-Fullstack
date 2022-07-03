@@ -55,9 +55,7 @@ The layout was created using CSS Flexbox and its fully responsive.
 
 It can be used in smaller screens and should not cause any horizontal scrolling untill the width of the screen gets smaller than 240px.
 
-There were quite a bit of external libraries used for the frontend.
-
-Some of the most important ones are;
+Here are some of the most important external libraries used in the frontend.
 
 [PrimeReact](https://www.primefaces.org/primereact/) for components and also their CSS utility library (PrimeFlex).
 
