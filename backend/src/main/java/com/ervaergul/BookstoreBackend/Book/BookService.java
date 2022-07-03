@@ -1,14 +1,13 @@
 package com.ervaergul.BookstoreBackend.Book;
 
-import com.ervaergul.BookstoreBackend.Book.Requests.BookDTO;
-import com.ervaergul.BookstoreBackend.Exception.CustomExceptions.ConflictedUpdateException;
-import com.ervaergul.BookstoreBackend.Exception.CustomExceptions.EntityAlreadyExistsException;
+import com.ervaergul.BookstoreBackend.Book.DTOs.BookDTO;
+import com.ervaergul.BookstoreBackend.Exception.CustomExceptions.ConflictException;
+import com.ervaergul.BookstoreBackend.Exception.CustomExceptions.NotFoundException;
+import com.ervaergul.BookstoreBackend.Exception.CustomExceptions.UnprocessableEntityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class BookService {
@@ -19,10 +18,11 @@ public class BookService {
     public String createBook(BookDTO bookDTO) {
         List<Book> booksWithSameName = bookRepository.findByNameIgnoreCase(bookDTO.getName());
 
+        /* If there are books with the same name, check matching books to see if the author is the same as well */
         if (!booksWithSameName.isEmpty()) {
             for (Book bookToCheck : booksWithSameName) {
                 if (bookToCheck.getAuthor().equalsIgnoreCase(bookDTO.getAuthor())) {
-                    throw new EntityAlreadyExistsException(bookToCheck.getName() + " by " + bookToCheck.getAuthor() + " already exists");
+                    throw new UnprocessableEntityException(bookToCheck.getName() + " by " + bookToCheck.getAuthor() + " already exists");
                 }
             }
         }
@@ -32,83 +32,83 @@ public class BookService {
         return newBook + " is now being sold";
     }
 
-    public List<Book> findAll() {
+    public List<Book> findAllBooks() {
         List<Book> books = bookRepository.findAll();
 
-        if(books.isEmpty()) {
-            throw new EntityNotFoundException("There are no books");
+        if (books.isEmpty()) {
+            throw new NotFoundException("There are no books");
         }
 
         return books;
     }
 
-    public List<Book> findByName(String name) {
-        List<Book> books = bookRepository.findByNameContainsIgnoreCase(name);
+    public List<Book> findBookByName(String bookName) {
+        List<Book> books = bookRepository.findByNameContainsIgnoreCase(bookName);
 
-        if(books.isEmpty()) {
-            throw new EntityNotFoundException("There are no books with name: " + name);
+        if (books.isEmpty()) {
+            throw new NotFoundException("There are no books with name: " + bookName);
         }
 
         return books;
     }
 
-    public List<Book> findByAuthor(String author) {
-        List<Book> books = bookRepository.findByAuthorContainsIgnoreCase(author);
+    public List<Book> findBookByAuthor(String bookAuthor) {
+        List<Book> books = bookRepository.findByAuthorContainsIgnoreCase(bookAuthor);
 
-        if(books.isEmpty()) {
-            throw new EntityNotFoundException("There are no books by author: " + author);
+        if (books.isEmpty()) {
+            throw new NotFoundException("There are no books by author: " + bookAuthor);
         }
 
         return books;
     }
 
-    public List<Book> findByType(String type) {
-        List<Book> books = bookRepository.findByTypeIgnoreCase(type);
+    public List<Book> findBookByType(String bookType) {
+        List<Book> books = bookRepository.findByTypeIgnoreCase(bookType);
 
-        if(books.isEmpty()) {
-            throw new EntityNotFoundException("There are no books with type: " + type);
+        if (books.isEmpty()) {
+            throw new NotFoundException("There are no books with type: " + bookType);
         }
 
         return books;
     }
 
-    public String setPrice(Long id, Long newValue) {
-        Book bookToUpdate = bookRepository.findById(id).orElse(null);
+    public String setBookPrice(Long bookId, Long newPrice) {
+        Book bookToUpdate = bookRepository.findById(bookId).orElse(null);
 
-        if(bookToUpdate == null) {
-            throw new EntityNotFoundException("There is no book with the id: " + id);
+        if (bookToUpdate == null) {
+            throw new NotFoundException("There is no book with the id: " + bookId);
         }
 
-        if(Objects.equals(bookToUpdate.getPrice(), newValue)) {
-            throw new ConflictedUpdateException(bookToUpdate.getName() + " is already being sold for " + bookToUpdate.getPrice());
+        if (bookToUpdate.getPrice().equals(newPrice)) {
+            throw new ConflictException(bookToUpdate.getName() + " is already being sold for " + bookToUpdate.getPrice());
         }
 
-        bookToUpdate.setPrice(newValue);
+        bookToUpdate.setPrice(newPrice);
         bookRepository.save(bookToUpdate);
-        return bookToUpdate.getName() + " is now being sold for " + newValue + "$";
+        return bookToUpdate.getName() + " is now being sold for " + bookToUpdate.getPrice();
     }
 
-    public String setStock(Long id, Long newValue) {
-        Book bookToUpdate = bookRepository.findById(id).orElse(null);
+    public String setBookStock(Long bookId, Long newStock) {
+        Book bookToUpdate = bookRepository.findById(bookId).orElse(null);
 
-        if(bookToUpdate == null) {
-            throw new EntityNotFoundException("There is no book with the id: " + id);
+        if (bookToUpdate == null) {
+            throw new NotFoundException("There is no book with the id: " + bookId);
         }
 
-        if(Objects.equals(bookToUpdate.getStock(), newValue)) {
-            throw new ConflictedUpdateException(bookToUpdate.getName() + " already has " + bookToUpdate.getStock() + " available stock");
+        if (bookToUpdate.getStock().equals(newStock)) {
+            throw new ConflictException(bookToUpdate.getName() + " already has " + bookToUpdate.getStock() + " available stock");
         }
 
-        bookToUpdate.setStock(newValue);
+        bookToUpdate.setStock(newStock);
         bookRepository.save(bookToUpdate);
         return bookToUpdate.getName() + " now has " + bookToUpdate.getStock() + " available stock";
     }
 
-    public String deleteBook(Long id) {
-        Book bookToDelete = bookRepository.findById(id).orElse(null);
+    public String deleteBook(Long bookId) {
+        Book bookToDelete = bookRepository.findById(bookId).orElse(null);
 
         if (bookToDelete == null) {
-            throw new EntityNotFoundException("There is no book with the id: " + id);
+            throw new NotFoundException("There is no book with the id: " + bookId);
         }
 
         bookRepository.delete(bookToDelete);

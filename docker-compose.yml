@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  bookstoredatabase:
+    image: mysql:8.0
+    container_name: bookstoredatabase
+    environment:
+      MYSQL_DATABASE: bookstore
+      MYSQL_USER: erva
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - '3308:3306'
+  bookstorebackend:
+    image: ervaergul/bookstore:backend
+    container_name: bookstorebackend
+    depends_on:
+      - bookstoredatabase
+    ports:
+      - '8080:8080'
+    restart: on-failure
+  bookstorefrontend:
+    image: ervaergul/bookstore:frontend
+    container_name: bookstorefrontend
+    ports:
+    - '3000:3000'

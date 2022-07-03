@@ -1,0 +1,44 @@
+.bg-primary-reverse {
+  color: var(--primary-color) !important;
+  background-color: var(--surface-ground) !important;
+}
+
+.p-button {
+  box-shadow: none !important;
+}
+
+.p-badge {
+  position: absolute !important;
+}
+
+.p-overlaypanel-content {
+  padding: 0.25rem 0.5rem !important;
+}
+
+.p-datatable .p-datatable-thead>tr>th {
+  padding: 0.5rem !important;
+}
+
+.p-datatable .p-datatable-tbody>tr>td {
+  padding: 0.25rem !important;
+}
+
+.p-tooltip-text {
+  font-size: 0.75rem !important;
+}
+
+.p-dropdown-label {
+  padding: 0.3rem !important;
+}
+
+.p-toast {
+  width: unset !important;
+}
+
+.p-toast-icon-close {
+  margin-left: 1rem !important;
+}
+
+.p-toast-message-content {
+  padding: 0.5rem !important;
+}

@@ -1,0 +1,139 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+img {
+  width: 100%;
+  height: auto;
+}
+
+#root {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  font-family: var(--font-family);
+  color: var(--text-color);
+  background-color: var(--surface-ground);
+}
+
+#applicationSidebar {
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 auto;
+  padding: 0.1rem;
+  gap: 3px;
+  overflow: hidden;
+  background-color: var(--surface-card);
+}
+
+#applicationPage {
+  display: flex;
+  flex-direction: row;
+  flex: 1 1 0;
+  overflow: auto;
+  background-color: var(--surface-ground);
+}
+
+.loadingImage {
+  position: absolute;
+  left: 50%;
+  bottom: 50%;
+  font-size: 3rem;
+  color: var(--primary-color);
+}
+
+.sidebarAboutButton {
+  margin-top: auto;
+}
+
+.authenticationForm {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 240px;
+  max-width: 360px;
+  margin: auto;
+  gap: 3px;
+}
+
+.crudTab {
+  display: flex;
+  flex-direction: column;
+  order: 1;
+  width: 100%;
+  min-width: 240px;
+  max-width: 480px;
+  margin-inline: auto;
+  gap: "3px";
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}
+
+.datatableFont {
+  font-size: 0.9rem;
+}
+
+.refreshDatatableButton {
+  position: absolute;
+}
+
+@media screen and (max-width:1024px) {
+  html {
+    font-size: 15px;
+  }
+
+  #root {
+    flex-direction: column;
+  }
+
+  #applicationSidebar {
+    flex-direction: row;
+  }
+
+  .sidebarAboutButton {
+    margin-top: unset;
+    margin-left: auto;
+  }
+
+  .datatableFont {
+    font-size: 0.8rem;
+  }
+}
+
+@media screen and (max-width:576px) {
+  html {
+    font-size: 14px;
+  }
+
+  .sidebarAvatar {
+    margin-left: auto !important;
+  }
+}
+
+
+/* -----Scrollbar Styling----- */
+*,
+*::before,
+*::after {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color) var(--primary-surface);
+}
+
+::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color);
+  border-radius: 5rem;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--primary-surface);
+}
