@@ -11,13 +11,7 @@ import java.util.List;
 
 /* Spring Security requires a "UserDetails" object to work with */
 /* This Wrapper class takes in our "User" entity and provides necessary methods for Spring Security */
-public class Principal implements UserDetails {
-
-    private User user;
-
-    public Principal(User user){
-        this.user = user;
-    }
+public record Principal(User user) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

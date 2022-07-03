@@ -69,8 +69,8 @@ public class SecurityConfiguration {
         httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         httpSecurity.authorizeRequests()
-                .antMatchers(HttpMethod.POST,"/users").permitAll()
-                .antMatchers(HttpMethod.POST,"/authentication/login").permitAll()
+                .antMatchers("/authentication/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/users").permitAll()
                 .antMatchers(HttpMethod.GET, "/books/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/books").hasAnyAuthority("admin")
                 .antMatchers(HttpMethod.PUT, "/books").hasAnyAuthority("admin")

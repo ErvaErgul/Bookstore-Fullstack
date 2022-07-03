@@ -1,7 +1,8 @@
 package com.ervaergul.BookstoreBackend.Authentication;
 
-import com.ervaergul.BookstoreBackend.Authentication.Responses.AuthenticationResponse;
-import com.ervaergul.BookstoreBackend.Exception.CustomExceptions.InvalidTokenException;
+import com.ervaergul.BookstoreBackend.Authentication.DTOs.AuthenticationResponseDTO;
+import com.ervaergul.BookstoreBackend.Cart.CartItemRepository;
+import com.ervaergul.BookstoreBackend.Exception.CustomExceptions.UnauthorizedException;
 import com.ervaergul.BookstoreBackend.User.User;
 import com.ervaergul.BookstoreBackend.User.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -22,6 +23,8 @@ public class AuthenticationService implements UserDetailsService {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    CartItemRepository cartItemRepository;
     @Value("${bookstore.app.secret}")
     private String appSecret;
 
@@ -29,8 +32,8 @@ public class AuthenticationService implements UserDetailsService {
     public Principal loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsernameIgnoreCase(username);
 
-        if(user == null) {
-            throw new UsernameNotFoundException(username + " not found");
+        if (user == null) {
+            throw new UsernameNotFoundException("Username not found");
         }
 
         return new Principal(user);
@@ -44,20 +47,18 @@ public class AuthenticationService implements UserDetailsService {
         return user.getRefreshToken();
     }
 
-    public Principal validateRefreshToken(String refreshToken) {
+    public String validateRefreshToken(String refreshToken) {
         User user = userRepository.findByRefreshToken(refreshToken);
 
-        if(user != null && !user.getRefreshTokenExpirationDate().before(new Date())){
-            return new Principal(user);
-        } else {
-            throw new InvalidTokenException("Invalid refresh token");
+        if (user != null && !user.getRefreshTokenExpirationDate().before(new Date())) {
+            return user.getUsername();
         }
 
+        throw new UnauthorizedException("Invalid refresh token");
     }
 
-    public String generateJwt(String username) {
-        User user = userRepository.findByUsernameIgnoreCase(username);
-        return Jwts.builder().setSubject(user.getUsername()).setIssuedAt(Date.from(Instant.now()))
+    public String generateJwt(Principal principal) {
+        return Jwts.builder().setSubject(principal.getUsername()).setIssuedAt(Date.from(Instant.now()))
                 .setExpiration(Date.from(Instant.now().plusSeconds(3600)))
                 .signWith(SignatureAlgorithm.HS256, appSecret).compact();
     }
@@ -74,22 +75,22 @@ public class AuthenticationService implements UserDetailsService {
             }
 
         } catch (Exception exception) {
-            throw new InvalidTokenException("Invalid jwt");
+            throw new UnauthorizedException("Invalid jwt");
         }
 
         return null;
     }
 
     /* Generates jwt for the given user */
-    public AuthenticationResponse authorizeUser(String username) {
-        AuthenticationResponse authenticationResponse = new AuthenticationResponse();
+    public AuthenticationResponseDTO authorizeUser(String username) {
+        Principal principal = loadUserByUsername(username);
+        AuthenticationResponseDTO response = new AuthenticationResponseDTO();
 
-        Principal userToAuthenticate = loadUserByUsername(username);
-
-        authenticationResponse.setJwt(generateJwt(userToAuthenticate.getUsername()));
-        authenticationResponse.setUsername(userToAuthenticate.getUsername());
-        authenticationResponse.setAuthority(userToAuthenticate.getAuthorities().toString());
-        return authenticationResponse;
+        response.setJwt(generateJwt(principal));
+        response.setUsername(principal.getUsername());
+        response.setAuthority(principal.getAuthorities().toString().substring(1, principal.getAuthorities().toString().length() - 1));
+        response.setCartItems(cartItemRepository.findByUser(principal.user()));
+        return response;
     }
 
 }

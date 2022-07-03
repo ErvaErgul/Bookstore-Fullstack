@@ -2,7 +2,7 @@ package com.ervaergul.BookstoreBackend.Security.Filters;
 
 import com.ervaergul.BookstoreBackend.Authentication.AuthenticationService;
 import com.ervaergul.BookstoreBackend.Authentication.Principal;
-import com.ervaergul.BookstoreBackend.Exception.CustomExceptions.InvalidTokenException;
+import com.ervaergul.BookstoreBackend.Exception.CustomExceptions.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,15 +30,15 @@ public class JwtFilter extends OncePerRequestFilter {
         String authorizationHeader = request.getHeader("Authorization");
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String accessToken = authorizationHeader.substring(7);
-            Principal principal = authenticationService.validateJwt(accessToken);
+            String jwt = authorizationHeader.substring(7);
+            Principal principal = authenticationService.validateJwt(jwt);
 
             if (principal != null) {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             } else {
-                throw new InvalidTokenException("Invalid jwt");
+                throw new UnauthorizedException("Invalid jwt");
             }
 
         }

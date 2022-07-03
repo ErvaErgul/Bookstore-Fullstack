@@ -1,7 +1,7 @@
 package com.ervaergul.BookstoreBackend.Authentication;
 
-import com.ervaergul.BookstoreBackend.Authentication.Requests.LoginDTO;
-import com.ervaergul.BookstoreBackend.Authentication.Responses.AuthenticationResponse;
+import com.ervaergul.BookstoreBackend.Authentication.DTOs.AuthenticationResponseDTO;
+import com.ervaergul.BookstoreBackend.Authentication.DTOs.LoginDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,29 +27,29 @@ public class AuthenticationController {
     private AuthenticationService authenticationService;
 
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@Valid @RequestBody LoginDTO loginDTO, HttpServletResponse response){
+    public ResponseEntity<Object> login(@Valid @RequestBody LoginDTO loginDTO, HttpServletResponse response) {
         try {
             /* We try to authenticate the user by using the username&password */
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(),loginDTO.getPassword()));
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword()));
         } catch (AuthenticationException authenticationException) {
             return new ResponseEntity<>("Invalid username or password", HttpStatus.UNAUTHORIZED);
         }
 
         /* At this point, the username&password authentication was successful, so we authorize the user */
-        AuthenticationResponse authenticationResponse = authenticationService.authorizeUser(loginDTO.getUsername());
+        AuthenticationResponseDTO authenticationResponseDTO = authenticationService.authorizeUser(loginDTO.getUsername());
 
         /* Add the refreshToken as a Http-Only cookie so that the user can request new Jwts with it */
-        Cookie newCookie = new Cookie("refreshToken", authenticationService.generateRefreshToken(loginDTO.getUsername()));
-        newCookie.setMaxAge(31536000);
-        newCookie.setHttpOnly(true);
-        response.addCookie(newCookie);
+        Cookie newRefreshTokenCookie = new Cookie("refreshToken", authenticationService.generateRefreshToken(loginDTO.getUsername()));
+        newRefreshTokenCookie.setMaxAge(31536000);
+        newRefreshTokenCookie.setHttpOnly(true);
+        response.addCookie(newRefreshTokenCookie);
 
-        return new ResponseEntity<>(authenticationResponse, HttpStatus.OK);
+        return new ResponseEntity<>(authenticationResponseDTO, HttpStatus.OK);
     }
 
-    @PutMapping("/refreshTokens")
-    public ResponseEntity<Object> refreshTokens(HttpServletRequest request, HttpServletResponse response){
-        Cookie refreshTokenCookie = WebUtils.getCookie(request,"refreshToken");
+    @PutMapping("/refreshJwt")
+    public ResponseEntity<Object> refreshJwt(HttpServletRequest request) {
+        Cookie refreshTokenCookie = WebUtils.getCookie(request, "refreshToken");
         String refreshToken;
         try {
             refreshToken = refreshTokenCookie.getValue();
@@ -57,22 +57,16 @@ public class AuthenticationController {
             return new ResponseEntity<>("There is no refreshToken in the cookie", HttpStatus.UNAUTHORIZED);
         }
 
-        Principal principal = authenticationService.validateRefreshToken(refreshToken);
+        String username = authenticationService.validateRefreshToken(refreshToken);
 
-        AuthenticationResponse authenticationResponse = authenticationService.authorizeUser(principal.getUsername());
+        AuthenticationResponseDTO authenticationResponseDTO = authenticationService.authorizeUser(username);
 
-        Cookie newCookie = new Cookie("refreshToken", authenticationService.generateRefreshToken(principal.getUsername()));
-        newCookie.setMaxAge(31536000);
-        newCookie.setHttpOnly(true);
-        response.addCookie(newCookie);
-
-
-        return new ResponseEntity<>(authenticationResponse, HttpStatus.OK);
+        return new ResponseEntity<>(authenticationResponseDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/logout")
-    public ResponseEntity<Object> logout(HttpServletResponse response){
-        Cookie emptyRefreshTokenCookie = new Cookie("refreshToken","");
+    public ResponseEntity<Object> logout(HttpServletResponse response) {
+        Cookie emptyRefreshTokenCookie = new Cookie("refreshToken", "");
         emptyRefreshTokenCookie.setMaxAge(0);
         emptyRefreshTokenCookie.setHttpOnly(true);
         response.addCookie(emptyRefreshTokenCookie);

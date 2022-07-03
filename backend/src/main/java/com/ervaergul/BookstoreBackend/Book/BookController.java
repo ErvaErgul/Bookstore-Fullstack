@@ -1,6 +1,6 @@
 package com.ervaergul.BookstoreBackend.Book;
 
-import com.ervaergul.BookstoreBackend.Book.Requests.BookDTO;
+import com.ervaergul.BookstoreBackend.Book.DTOs.BookDTO;
 import com.mysql.cj.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,45 +26,42 @@ public class BookController {
         return new ResponseEntity<>(bookService.createBook(bookDTO), HttpStatus.CREATED);
     }
 
-    @GetMapping(value= {"", "/{attributeToSearchBy}={search}"})
+    @GetMapping(value = {"", "/{attributeToSearchBy}={searchParameter}"})
     public ResponseEntity<Object> findBook(@PathVariable(required = false) String attributeToSearchBy,
-                                           @PathVariable(required = false) String search) {
+                                           @PathVariable(required = false) String searchParameter) {
 
-        if (!StringUtils.isNullOrEmpty(attributeToSearchBy) && !StringUtils.isNullOrEmpty(search)) {
-            switch(attributeToSearchBy) {
-                case "name":
-                    return new ResponseEntity<>(bookService.findByName(search), HttpStatus.OK);
-                case "author":
-                    return new ResponseEntity<>(bookService.findByAuthor(search), HttpStatus.OK);
-                case "type":
-                    return new ResponseEntity<>(bookService.findByType(search), HttpStatus.OK);
-                default:
-                    return new ResponseEntity<>(attributeToSearchBy + " is not a valid attribute to search by", HttpStatus.BAD_REQUEST);
-            }
+        boolean bothPathVariablesAreNotEmpty = (!StringUtils.isNullOrEmpty(attributeToSearchBy) && !StringUtils.isNullOrEmpty(searchParameter));
+
+        if (bothPathVariablesAreNotEmpty) {
+            return switch (attributeToSearchBy) {
+                case "name" -> new ResponseEntity<>(bookService.findBookByName(searchParameter), HttpStatus.OK);
+                case "author" -> new ResponseEntity<>(bookService.findBookByAuthor(searchParameter), HttpStatus.OK);
+                case "type" -> new ResponseEntity<>(bookService.findBookByType(searchParameter), HttpStatus.OK);
+                default ->
+                        new ResponseEntity<>(attributeToSearchBy + " is not a valid attribute to search by", HttpStatus.BAD_REQUEST);
+            };
         }
 
-        return new ResponseEntity<>(bookService.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(bookService.findAllBooks(), HttpStatus.OK);
     }
 
-    @PutMapping("/{id}/{attributeToUpdate}={newValue}")
-    public ResponseEntity<Object> updateBook(@PathVariable @NotNull @Positive Long id,
+    @PutMapping("/{bookId}/{attributeToUpdate}={newValue}")
+    public ResponseEntity<Object> updateBook(@PathVariable @NotNull @Positive Long bookId,
                                              @PathVariable @NotBlank String attributeToUpdate,
                                              @PathVariable @NotNull @Positive Long newValue) {
 
-        switch (attributeToUpdate) {
-            case "price":
-                return new ResponseEntity<>(bookService.setPrice(id,newValue), HttpStatus.OK);
-            case "stock":
-                return new ResponseEntity<>(bookService.setStock(id,newValue), HttpStatus.OK);
-            default:
-                return new ResponseEntity<>(attributeToUpdate + " is not a valid attribute to update", HttpStatus.BAD_REQUEST);
-        }
+        return switch (attributeToUpdate) {
+            case "price" -> new ResponseEntity<>(bookService.setBookPrice(bookId, newValue), HttpStatus.OK);
+            case "stock" -> new ResponseEntity<>(bookService.setBookStock(bookId, newValue), HttpStatus.OK);
+            default ->
+                    new ResponseEntity<>(attributeToUpdate + " is not a valid attribute to update", HttpStatus.BAD_REQUEST);
+        };
 
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteBook(@PathVariable @NotNull @Positive Long id) {
-        return new ResponseEntity<>(bookService.deleteBook(id), HttpStatus.OK);
+    @DeleteMapping("/{bookId}")
+    public ResponseEntity<Object> deleteBook(@PathVariable @NotNull @Positive Long bookId) {
+        return new ResponseEntity<>(bookService.deleteBook(bookId), HttpStatus.OK);
     }
 
 }
