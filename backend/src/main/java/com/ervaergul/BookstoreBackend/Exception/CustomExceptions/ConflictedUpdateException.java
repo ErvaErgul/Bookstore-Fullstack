@@ -1,4 +1,4 @@
-package com.ervaergul.BookstoreBackend.Exception;
+package com.ervaergul.BookstoreBackend.Exception.CustomExceptions;
 
 public class ConflictedUpdateException extends RuntimeException {
 

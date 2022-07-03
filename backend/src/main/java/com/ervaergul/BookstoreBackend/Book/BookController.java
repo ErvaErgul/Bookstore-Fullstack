@@ -1,6 +1,7 @@
 package com.ervaergul.BookstoreBackend.Book;
 
 import com.ervaergul.BookstoreBackend.Book.Requests.BookDTO;
+import com.mysql.cj.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +23,14 @@ public class BookController {
 
     @PostMapping
     public ResponseEntity<Object> createBook(@Valid @RequestBody BookDTO bookDTO) {
-        bookService.createBook(bookDTO);
-        return new ResponseEntity<>(bookDTO.getName() + " created successfully", HttpStatus.CREATED);
+        return new ResponseEntity<>(bookService.createBook(bookDTO), HttpStatus.CREATED);
     }
 
     @GetMapping(value= {"", "/{attributeToSearchBy}={search}"})
-    public ResponseEntity<Object> findBook(@PathVariable(required = false) String attributeToSearchBy, @PathVariable(required = false) String search) {
-        if (attributeToSearchBy != null && search != null) {
+    public ResponseEntity<Object> findBook(@PathVariable(required = false) String attributeToSearchBy,
+                                           @PathVariable(required = false) String search) {
+
+        if (!StringUtils.isNullOrEmpty(attributeToSearchBy) && !StringUtils.isNullOrEmpty(search)) {
             switch(attributeToSearchBy) {
                 case "name":
                     return new ResponseEntity<>(bookService.findByName(search), HttpStatus.OK);
@@ -40,6 +42,7 @@ public class BookController {
                     return new ResponseEntity<>(attributeToSearchBy + " is not a valid attribute to search by", HttpStatus.BAD_REQUEST);
             }
         }
+
         return new ResponseEntity<>(bookService.findAll(), HttpStatus.OK);
     }
 
@@ -47,6 +50,7 @@ public class BookController {
     public ResponseEntity<Object> updateBook(@PathVariable @NotNull @Positive Long id,
                                              @PathVariable @NotBlank String attributeToUpdate,
                                              @PathVariable @NotNull @Positive Long newValue) {
+
         switch (attributeToUpdate) {
             case "price":
                 return new ResponseEntity<>(bookService.setPrice(id,newValue), HttpStatus.OK);
@@ -55,6 +59,7 @@ public class BookController {
             default:
                 return new ResponseEntity<>(attributeToUpdate + " is not a valid attribute to update", HttpStatus.BAD_REQUEST);
         }
+
     }
 
     @DeleteMapping("/{id}")

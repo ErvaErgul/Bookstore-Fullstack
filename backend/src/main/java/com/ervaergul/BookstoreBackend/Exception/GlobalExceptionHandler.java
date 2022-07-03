@@ -1,5 +1,8 @@
 package com.ervaergul.BookstoreBackend.Exception;
 
+import com.ervaergul.BookstoreBackend.Exception.CustomExceptions.ConflictedUpdateException;
+import com.ervaergul.BookstoreBackend.Exception.CustomExceptions.EntityAlreadyExistsException;
+import com.ervaergul.BookstoreBackend.Exception.CustomExceptions.InvalidTokenException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +28,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   HttpStatus status,
                                                                   WebRequest request) {
         Map<String, String> errors = new HashMap<>();
+
         exception.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String message = error.getDefaultMessage();
@@ -37,6 +41,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException exception) {
         Map<String, String> errors = new HashMap<>();
+
         exception.getConstraintViolations().forEach((violation) -> {
             String fieldName = null;
             for (Path.Node node : violation.getPropertyPath()){
@@ -45,6 +50,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             String message = violation.getMessage();
             errors.put(fieldName, message);
         });
+
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
@@ -63,9 +69,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleException(Exception exception) {
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<Object> handleInvalidTokenException(InvalidTokenException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
 }
