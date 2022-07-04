@@ -61,7 +61,7 @@ Here are some of the most important external libraries used in the frontend.
 
 This project was a learning experience for me and there is still many features that need to be implemented. Here are some of the most important ones;
 - Pagination ( Right now the database contains a small number of books so there is no pagination )
-- Improved Queries ( Queries with multiple parameters )
+- Improved Queries ( Advanced queries with multiple parameters and sorting options )
 
 # Contact Me
 
