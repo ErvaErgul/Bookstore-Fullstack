@@ -63,6 +63,8 @@ This project was a learning experience for me and there is still many features t
 - Pagination ( Right now the database contains a small number of books so there is no pagination )
 - Improved Queries ( Queries with multiple parameters )
 
----
+# Contact Me
+
+erva.ergul98@gmail.com
 
 [Linkedin](https://linkedin.com/in/ervaergul)
