@@ -11,6 +11,8 @@ Personnel has the ability to perform CRUD operations on the database through the
 
 The project is fully dockerized and uploaded to [dockerhub](https://hub.docker.com/r/ervaergul/bookstore/tags). You can use the "docker-compose.yml" file in the src directory to run the project.
 
+The frontend runs on "localhost:3000"
+
 To perform CRUD operations, log in with;
 - username: erva
 - password: password
