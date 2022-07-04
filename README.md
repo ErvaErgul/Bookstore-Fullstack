@@ -1,5 +1,5 @@
 # Introduction
-This project was created by [Erva Ergul](https://www.linkedin.com/in/ervaergul) using Spring Boot and ReactJS.
+This project was created by using Spring Boot and ReactJS.
 
 The project is designed for 2 types of users.
 - Customers
@@ -35,13 +35,9 @@ You can see the security configuration for the endpoints here;
 
 Every single HttpRequest sent to the protected endpoints must contain a valid Jwt in the "Authorization" header.
 
-Jwt tokens contain information about the user(authorities, username, expiration date of token).
+Jwts contain information about the user(authorities, username, expiration date of token).
 
-Jwt tokens have a relatively short expiration duration.
-
-Each user also has a unique refresh token that allows them to request new Jwts. The refresh tokens have a much higher expiration duration.
-
-If the Jwt is valid the user is authorized depending on their authority, if there is no Jwt the user is denied access.
+If the Jwt is valid the user is authorized depending on their authority.
 
 ## Exception Handling
 Exceptions are handled globally with a single class and the server sends back a HttpResponse with the proper HttpStatus for the given exception.
@@ -52,8 +48,6 @@ Exceptions are handled globally with a single class and the server sends back a 
 Frontend is created using ReactJS and PrimeReact components.
 
 The layout was created using CSS Flexbox and its fully responsive.
-
-It can be used in smaller screens and should not cause any horizontal scrolling untill the width of the screen gets smaller than 240px.
 
 Here are some of the most important external libraries used in the frontend.
 
