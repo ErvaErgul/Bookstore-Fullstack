@@ -51,7 +51,7 @@ The layout was created using CSS Flexbox and its fully responsive.
 
 Here are some of the most important external libraries used in the frontend.
 
-[PrimeReact](https://www.primefaces.org/primereact/) for components and also their CSS utility library (PrimeFlex).
+[PrimeReact](https://www.primefaces.org/primereact/) for components and also their CSS utility library [PrimeFlex](https://www.primefaces.org/primeflex).
 
 [Zustand](https://github.com/pmndrs/zustand) for global state management.
 
