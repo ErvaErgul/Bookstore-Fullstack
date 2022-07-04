@@ -1,5 +1,5 @@
 # Introduction
-This project was created using Spring Boot and ReactJS.
+This project was created using Spring Boot, ReactJS and MySQL.
 
 The project is designed for 2 types of users.
 - Customers
