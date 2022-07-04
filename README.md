@@ -37,7 +37,7 @@ Every single HttpRequest sent to the protected endpoints must contain a valid Jw
 
 Jwts contain information about the user(authorities, username, expiration date of token).
 
-If the Jwt is valid the user is authorized depending on their authority.
+If the Jwt is valid, the user is authorized, if not the server sends back a 401 response. 
 
 ## Exception Handling
 Exceptions are handled globally with a single class and the server sends back a HttpResponse with the proper HttpStatus for the given exception.
