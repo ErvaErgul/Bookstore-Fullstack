@@ -1,4 +1,4 @@
-version: '3.8'
+version: '2.1'
 
 services:
   bookstoredatabase:
@@ -10,12 +10,17 @@ services:
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: password
     ports:
-      - '3308:3306'
+      - '3306:3306'
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 8s
+      retries: 10
   bookstorebackend:
     image: ervaergul/bookstore:backend
     container_name: bookstorebackend
     depends_on:
-      - bookstoredatabase
+      bookstoredatabase:
+        condition: service_healthy
     ports:
       - '8080:8080'
     restart: on-failure
