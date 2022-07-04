@@ -18,9 +18,9 @@ To perform CRUD operations, log in with;
 # Backend
 Backend is created using Spring Boot.
 
-You can see the UML-Diagram containing information about the backend structure [here](https://lucid.app/lucidchart/9216b758-ac25-4855-be0f-4e03b573e5d0/edit?invitationId=inv_1ebcbe3c-eb75-413b-9f7f-1b1bdbef2e0c#)
+You can see the UML-Diagram containing information about the backend structure [here](https://lucid.app/lucidchart/9216b758-ac25-4855-be0f-4e03b573e5d0/edit?viewport_loc=2194%2C177%2C3012%2C1428%2C0_0&invitationId=inv_1ebcbe3c-eb75-413b-9f7f-1b1bdbef2e0c#)
 
-![Bookstore - Fullstack](https://user-images.githubusercontent.com/80357887/176176950-f7bb647d-8f2a-4d72-90fd-d9a74f50169b.png)
+![Bookstore - Fullstack](https://user-images.githubusercontent.com/80357887/177112778-9df36012-ad2b-4b25-9ee6-35608ec2aea2.png)
 
 There is also a Postman collection with various API requests so you can check out some of the responses the server will give you.
 
