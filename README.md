@@ -40,7 +40,7 @@ Jwts contain information about the user(authorities, username, expiration date o
 If the Jwt is valid, the user is authorized, if not the server sends back a 401 response. 
 
 ## Exception Handling
-Exceptions are handled globally with a single class and the server sends back a HttpResponse with the proper HttpStatus for the given exception.
+Exceptions are handled globally with a single class and the server sends back a HttpResponse with the appropriate HttpStatus for the given exception.
 
 ![image](https://user-images.githubusercontent.com/80357887/176176605-3de3d586-7d1f-491f-863f-91bc5b56b91b.png)
 
