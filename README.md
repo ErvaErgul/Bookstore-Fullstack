@@ -51,11 +51,11 @@ The layout was created using CSS Flexbox and its fully responsive.
 
 Here are some of the most important external libraries used in the frontend.
 
-[PrimeReact](https://www.primefaces.org/primereact/) for components and also their CSS utility library [PrimeFlex](https://www.primefaces.org/primeflex).
+- [PrimeReact](https://www.primefaces.org/primereact/) for components and also their CSS utility library [PrimeFlex](https://www.primefaces.org/primeflex).
 
-[Zustand](https://github.com/pmndrs/zustand) for global state management.
+- [Zustand](https://github.com/pmndrs/zustand) for global state management.
 
-[React Hook Form](https://react-hook-form.com) and [Yup](https://www.npmjs.com/package/yup) for form validation.
+- [React Hook Form](https://react-hook-form.com) and [Yup](https://www.npmjs.com/package/yup) for performance and form validation.
 
 # Features to Be Added
 
